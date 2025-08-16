@@ -10,26 +10,26 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # 1️⃣ Checkout repo
       - name: Checkout repo
         uses: actions/checkout@v3
 
-      - name: Tạo JSON và YAML từ thư mục images
+      # 2️⃣ Tạo JSON và YAML từ folder images
+      - name: Tạo JSON và YAML
         run: |
           cd images
 
-          # Tạo JSON
+          # JSON
           echo "[" > images.json
           for file in *.{jpg,jpeg,png,gif,webp}; do
             [ -f "$file" ] || continue
-            # Lấy ngày commit gần nhất của file, nếu không có commit thì lấy ngày hiện tại
             date=$(git log -1 --format="%cs" -- "$file" || date +%Y-%m-%d)
             echo "  {\"file\": \"$file\", \"date\": \"$date\"}," >> images.json
           done
-          # Xóa dấu phẩy cuối cùng
           sed -i '$ s/,$//' images.json
           echo "]" >> images.json
 
-          # Tạo YAML
+          # YAML
           echo "images:" > update-images-json.yml
           for file in *.{jpg,jpeg,png,gif,webp}; do
             [ -f "$file" ] || continue
@@ -38,11 +38,11 @@ jobs:
             echo "    date: $date" >> update-images-json.yml
           done
 
+      # 3️⃣ Commit & push JSON/YAML
       - name: Commit và push JSON/YAML
-        uses: ad-m/github-push-action@v0.6.0
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          branch: main
-          force: true
-          commit_message: "Tự động cập nhật images.json & update-images-json.yml"
-          file_pattern: "images/images.json,images/update-images-json.yml"
+        run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add images/images.json images/update-images-json.yml
+          git commit -m "Tự động cập nhật images.json & update-images-json.yml" || echo "No changes to commit"
+          git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/puios/phuongdungcuti.git main
