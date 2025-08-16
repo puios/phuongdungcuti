@@ -1,0 +1,45 @@
+name: Tự động cập nhật images.json và update-images-json.yml
+
+on:
+  push:
+    paths:
+      - 'images/**'
+
+jobs:
+  update-images:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Tạo JSON và YAML từ thư mục images
+        run: |
+          cd images
+          # JSON
+          echo "[" > images.json
+          for file in *.{jpg,jpeg,png,gif,webp}; do
+            [ -f "$file" ] || continue
+            # Lấy ngày commit gần nhất của file
+            date=$(git log -1 --format="%cs" -- "$file" || date +%Y-%m-%d)
+            echo "  {\"file\": \"$file\", \"date\": \"$date\"}," >> images.json
+          done
+          sed -i '$ s/,$//' images.json
+          echo "]" >> images.json
+
+          # YAML
+          echo "images:" > update-images-json.yml
+          for file in *.{jpg,jpeg,png,gif,webp}; do
+            [ -f "$file" ] || continue
+            date=$(git log -1 --format="%cs" -- "$file" || date +%Y-%m-%d)
+            echo "  - file: $file" >> update-images-json.yml
+            echo "    date: $date" >> update-images-json.yml
+
+      - name: Commit và push JSON/YAML
+        uses: ad-m/github-push-action@v0.6.0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: main
+          force: true
+          commit_message: "Tự động cập nhật images.json & update-images-json.yml"
+          file_pattern: "images/images.json,images/update-images-json.yml"
