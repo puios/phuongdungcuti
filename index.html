@@ -99,7 +99,11 @@
 <div class="top-bar">
   <div class="mode-btn" id="modeBtn">🌙</div>
   <div class="ig-btn" id="igBtn">
-    <img src="https://e7.pngegg.com/pngimages/672/312/png-clipart-instagram-logo-icon-others-text-photography.png" alt="Instagram" style="width:100%; height:100%;">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
+      <path fill="currentColor" d="M349.33 69.33H162.67C106.36 69.33 69.33 106.36 69.33 162.67v186.67c0 56.31 37.03 93.34 93.34 93.34h186.67c56.31 0 93.34-37.03 93.34-93.34V162.67c0-56.31-37.03-93.34-93.34-93.34zm62.67 280c0 34.49-28.18 62.67-62.67 62.67H162.67c-34.49 0-62.67-28.18-62.67-62.67V162.67c0-34.49 28.18-62.67 62.67-62.67h186.67c34.49 0 62.67 28.18 62.67 62.67v186.66z"/>
+      <path fill="currentColor" d="M256 164a92 92 0 1 0 0 184 92 92 0 0 0 0-184zm0 152a60 60 0 1 1 0-120 60 60 0 0 1 0 120z"/>
+      <circle cx="396.67" cy="115.33" r="17.33" fill="currentColor"/>
+    </svg>
   </div>
 </div>
 <h1>Album pdungcutii📷</h1>
@@ -124,7 +128,7 @@ const lbNext=document.getElementById('lb-next');
 const modeBtn=document.getElementById('modeBtn');
 const igBtn=document.getElementById('igBtn');
 
-let imagesList=[],currentIndex=0,isAnimating=false,autoSlideTimer=null,isDark=false;
+let imagesList=[],currentIndex=0,isAnimating=false,isDark=false;
 
 // Gallery
 function displayImage(img){
@@ -147,7 +151,6 @@ function openLightbox(index){
   lightbox.classList.add('show');
   document.body.style.overflow='hidden';
   setTimeout(()=>{ lbImg.style.transform='scale(1)'; isAnimating=false; },1300);
-  startAutoSlide();
 }
 
 function closeLightbox(){
@@ -155,7 +158,6 @@ function closeLightbox(){
   document.body.style.overflow='';
   lbImg.style.transform='scale(0.7)';
   setTimeout(()=>{ lbImg.src=''; lbDate.textContent=''; },1300);
-  stopAutoSlide();
 }
 
 function updateLightbox(animate=false,direction=0){
@@ -177,26 +179,8 @@ function updateLightbox(animate=false,direction=0){
   }
 }
 
-function prevImage(){
-  if(isAnimating) return;
-  currentIndex=(currentIndex-1+imagesList.length)%imagesList.length;
-  updateLightbox(true,1);
-}
-
-function nextImage(){
-  if(isAnimating) return;
-  currentIndex=(currentIndex+1)%imagesList.length;
-  updateLightbox(true,-1);
-}
-
-// Auto slide
-function startAutoSlide(){
-  if(autoSlideTimer) return;
-  autoSlideTimer=setInterval(()=>{
-    if(!isAnimating) nextImage();
-  },3000);
-}
-function stopAutoSlide(){ clearInterval(autoSlideTimer); autoSlideTimer=null; }
+function prevImage(){ if(isAnimating) return; currentIndex=(currentIndex-1+imagesList.length)%imagesList.length; updateLightbox(true,1);}
+function nextImage(){ if(isAnimating) return; currentIndex=(currentIndex+1)%imagesList.length; updateLightbox(true,-1);}
 
 // Events
 lbClose.addEventListener('click',closeLightbox);
@@ -208,11 +192,7 @@ lightbox.addEventListener('click',e=>{ if(e.target===lightbox) closeLightbox(); 
 let touchStartX=0,touchEndX=0;
 lightbox.addEventListener('touchstart',e=>{ touchStartX=e.changedTouches[0].screenX; });
 lightbox.addEventListener('touchend',e=>{ touchEndX=e.changedTouches[0].screenX; handleGesture(); });
-function handleGesture(){
-  const diff=touchEndX-touchStartX;
-  if(diff<-50) nextImage();
-  if(diff>50) prevImage();
-}
+function handleGesture(){ const diff=touchEndX-touchStartX; if(diff<-50) nextImage(); if(diff>50) prevImage(); }
 
 // Dark/Light mode
 modeBtn.addEventListener('click',()=>{
@@ -221,12 +201,12 @@ modeBtn.addEventListener('click',()=>{
     document.body.style.background='#111';
     modeBtn.textContent='☀️';
     lbImg.style.boxShadow='0 0 30px #fff';
-    igBtn.firstElementChild.style.filter='invert(1)';
+    igBtn.firstElementChild.style.color='white';
   }else{
     document.body.style.background='#f4f4f4';
     modeBtn.textContent='🌙';
     lbImg.style.boxShadow='0 0 30px rgba(255,255,255,0.5)';
-    igBtn.firstElementChild.style.filter='invert(0)';
+    igBtn.firstElementChild.style.color='black';
   }
 });
 
