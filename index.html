@@ -1,145 +1,164 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-  <meta charset="UTF-8">
-  <title>Album pdungcutii</title>
-  <link href="https://fonts.googleapis.com/css2?family=Mali&display=swap" rel="stylesheet">
-  <style>
-    body {
-      font-family: 'Mali', cursive;
-      background: #f4f4f4;
-      margin: 0;
-      padding: 20px;
-      text-align: center;
-      transition: background 0.5s, color 0.5s;
-      overflow-x: hidden;
-    }
-    body.dark {
-      background: #111;
-      color: #fff;
-    }
+<meta charset="UTF-8">
+<title>Album Của Phuong Dunq📷</title>
+<link href="https://fonts.googleapis.com/css2?family=Mali:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-color: #f4f4f4;
+  --text-color: #000;
+  --shadow-color: rgba(0,0,0,0.1);
+  --lightbox-shadow: rgba(255,255,255,0.7);
+  --glow-color: transparent;
+}
 
-    h1 {
-      margin-bottom: 20px;
-    }
+body.dark {
+  --bg-color: #111;
+  --text-color: #fff;
+  --shadow-color: rgba(255,255,255,0.2);
+  --glow-color: #fff;
+}
 
-    .theme-toggle {
-      position: fixed;
-      top: 20px;
-      left: 20px;
-      font-size: 48px;
-      cursor: pointer;
-      user-select: none;
-      transition: transform 0.3s;
-      z-index: 1000;
-    }
-    .theme-toggle:hover { transform: scale(1.1); }
+body {
+  font-family: 'Mali', cursive;
+  background: var(--bg-color);
+  color: var(--text-color);
+  margin: 0;
+  padding: 20px;
+  text-align: center;
+  transition: background 0.3s, color 0.3s;
+  overflow-x: hidden;
+}
 
-    .gallery {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 15px;
-      max-width: 800px;
-      margin: 0 auto;
-      transition: filter 0.3s;
-    }
-    .blur { filter: blur(5px); }
+h1 { margin-bottom: 20px; }
 
-    .image-box {
-      position: relative;
-      width: 100%;
-      padding-top: 100%;
-      border-radius: 12px;
-      overflow: hidden;
-      background: white;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-      cursor: pointer;
-      transition: transform 0.2s, box-shadow 0.3s;
-    }
-    .image-box:hover { transform: scale(1.03); }
-    body.dark .image-box { box-shadow: 0 0 15px 2px #fff; }
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 15px;
+  max-width: 800px;
+  margin: 0 auto;
+  transition: filter 0.3s;
+}
 
-    .image-box img {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      top: 0;
-      left: 0;
-    }
+.blur { filter: blur(5px); }
 
-    .image-box p {
-      position: absolute;
-      bottom: 5px;
-      left: 5px;
-      margin: 0;
-      padding: 2px 6px;
-      background: rgba(0,0,0,0.5);
-      color: white;
-      font-size: 12px;
-      border-radius: 4px;
-      opacity: 0;
-      transition: opacity 0.2s;
-    }
-    .image-box:active p { opacity: 1; }
+.image-box {
+  position: relative;
+  width: 100%;
+  padding-top: 100%;
+  border-radius: 12px;
+  overflow: hidden;
+  background: white;
+  box-shadow: 0 2px 8px var(--shadow-color);
+  cursor: pointer;
+  transition: transform 0.2s;
+}
 
-    .lightbox {
-      display: none;
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0,0,0,0.8);
-      justify-content: center;
-      align-items: center;
-      z-index: 999;
-      flex-direction: column;
-      color: white;
-      opacity: 0;
-      transition: opacity 0.5s ease;
-      overflow: hidden;
-    }
-    .lightbox.show { display: flex; opacity: 1; }
+.image-box:hover { transform: scale(1.03); }
 
-    .lightbox img {
-      max-width: 90%;
-      max-height: 70%;
-      border-radius: 12px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.7);
-      margin-bottom: 10px;
-      position: relative;
-      transition: transform 1.3s ease, opacity 0.5s ease;
-      object-fit: cover;
-      aspect-ratio: 4 / 3;
-    }
+.image-box img {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  top: 0;
+  left: 0;
+}
 
-    .lightbox p { margin: 5px 0 0 0; font-size: 16px; }
+.image-box p {
+  position: absolute;
+  bottom: 5px;
+  left: 5px;
+  margin: 0;
+  padding: 2px 6px;
+  background: rgba(0,0,0,0.5);
+  color: white;
+  font-size: 12px;
+  border-radius: 4px;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
 
-    .lightbox .close, .lightbox .prev, .lightbox .next {
-      position: absolute;
-      font-size: 30px;
-      cursor: pointer;
-      user-select: none;
-      background: rgba(0,0,0,0.3);
-      padding: 5px 10px;
-      border-radius: 6px;
-      transition: background 0.3s;
-    }
-    .lightbox .close:hover, .lightbox .prev:hover, .lightbox .next:hover { background: rgba(0,0,0,0.6); }
-    .lightbox .close { top: 20px; right: 30px; }
-    .lightbox .prev { left: 20px; top: 50%; transform: translateY(-50%); }
-    .lightbox .next { right: 20px; top: 50%; transform: translateY(-50%); }
+.image-box:active p { opacity: 1; }
 
-    @media (max-width: 600px) { .gallery { grid-template-columns: 1fr; } }
+.dark .image-box:active p { color: #fff; }
 
-    /* khóa cuộn khi Lightbox */
-    body.noscroll { overflow: hidden !important; height: 100vh; }
-  </style>
+.lightbox {
+  display: none;
+  position: fixed;
+  top:0; left:0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.8);
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+  flex-direction: column;
+  color: white;
+  opacity: 0;
+  transition: opacity 0.3s;
+  overflow: hidden;
+}
+
+.lightbox.show { display: flex; opacity: 1; }
+
+.lightbox img {
+  max-width: 90%;
+  aspect-ratio: 4/3;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px var(--lightbox-shadow);
+  margin-bottom: 10px;
+  position: relative;
+  transform: scale(0);
+  transition: transform 1.3s ease;
+}
+
+.lightbox.show img { transform: scale(1); }
+
+.lightbox p {
+  margin: 5px 0 0 0;
+  font-size: 16px;
+  text-shadow: 0 0 0 var(--glow-color);
+  transition: text-shadow 0.5s;
+}
+
+.lightbox.show.dark p {
+  text-shadow: 0 0 10px var(--glow-color), 0 0 20px var(--glow-color);
+}
+
+.lightbox .close, .lightbox .prev, .lightbox .next {
+  position: absolute;
+  font-size: 30px;
+  cursor: pointer;
+  user-select: none;
+  background: rgba(0,0,0,0.3);
+  padding: 5px 10px;
+  border-radius: 6px;
+}
+
+.lightbox .close { top: 20px; right: 30px; }
+.lightbox .prev { left: 20px; top: 50%; transform: translateY(-50%); }
+.lightbox .next { right: 20px; top: 50%; transform: translateY(-50%); }
+
+@media (max-width: 600px) { .gallery { grid-template-columns: 1fr; } }
+
+#modeToggle {
+  position: fixed;
+  top: 20px; left: 20px;
+  font-size: 36px;
+  cursor: pointer;
+  z-index: 1000;
+  user-select: none;
+  transition: transform 0.3s;
+}
+</style>
 </head>
 <body>
 <h1>Album Của Phuong Dunq📷</h1>
 
-<div class="theme-toggle" id="theme-toggle">🌙</div>
+<div id="modeToggle">🌙</div>
 
 <div class="gallery" id="gallery"></div>
 
@@ -153,108 +172,93 @@
 
 <script src="https://cdn.jsdelivr.net/npm/js-yaml@4.1.0/dist/js-yaml.min.js"></script>
 <script>
-  const gallery = document.getElementById('gallery');
-  const lightbox = document.getElementById('lightbox');
-  const lbImg = document.getElementById('lb-img');
-  const lbDate = document.getElementById('lb-date');
-  const lbClose = document.getElementById('lb-close');
-  const lbPrev = document.getElementById('lb-prev');
-  const lbNext = document.getElementById('lb-next');
-  const themeToggle = document.getElementById('theme-toggle');
-  let imagesList = [];
-  let currentIndex = 0;
+const gallery = document.getElementById('gallery');
+const lightbox = document.getElementById('lightbox');
+const lbImg = document.getElementById('lb-img');
+const lbDate = document.getElementById('lb-date');
+const lbClose = document.getElementById('lb-close');
+const lbPrev = document.getElementById('lb-prev');
+const lbNext = document.getElementById('lb-next');
+const modeToggle = document.getElementById('modeToggle');
 
-  // Toggle theme
-  themeToggle.addEventListener('click', () => {
-    document.body.classList.toggle('dark');
-    themeToggle.textContent = document.body.classList.contains('dark') ? '☀️' : '🌙';
-  });
+let imagesList = [];
+let currentIndex = 0;
 
-  function displayImage(img) {
-    imagesList.push(img);
-    const box = document.createElement('div');
-    box.className = 'image-box';
-    box.innerHTML = `<img src="images/${img.file}" alt="${img.file}"><p>${img.date}</p>`;
-    const index = imagesList.length - 1;
-    box.addEventListener('click', () => openLightbox(index));
-    gallery.appendChild(box);
-  }
+function displayImage(img) {
+  const box = document.createElement('div');
+  box.className = 'image-box';
+  box.innerHTML = `<img src="images/${img.file}" alt="${img.file}">
+                   <p>${img.date}</p>`;
+  const index = imagesList.push(img)-1;
+  box.addEventListener('click', ()=>openLightbox(index));
+  gallery.appendChild(box);
+}
 
-  function openLightbox(index) {
-    currentIndex = index;
-    document.body.classList.add('noscroll');
-    lbImg.style.opacity = 0;
-    lightbox.classList.add('show');
-    setTimeout(() => updateLightbox(false), 50); // animation to scale
-  }
+function openLightbox(index){
+  currentIndex = index;
+  gallery.classList.add('blur');
+  document.body.style.overflow='hidden';
+  lightbox.classList.add('show');
+  lightbox.classList.toggle('dark', document.body.classList.contains('dark'));
+  updateLightbox(false);
+  requestAnimationFrame(()=>{ lbImg.style.transform='scale(1)'; });
+}
 
-  function closeLightbox() {
+function closeLightbox(){
+  lbImg.style.transform='scale(0)';
+  setTimeout(()=>{
     lightbox.classList.remove('show');
-    document.body.classList.remove('noscroll');
-    lbImg.style.opacity = 0;
-    setTimeout(() => { lbImg.src = ''; lbDate.textContent = ''; }, 500);
-  }
+    gallery.classList.remove('blur');
+    lbImg.src='';
+    lbDate.textContent='';
+    document.body.style.overflow='';
+  },400);
+}
 
-  function updateLightbox(animate=false, direction=0) {
-    const img = imagesList[currentIndex];
-    if(animate) {
-      lbImg.style.transition = 'transform 0.4s cubic-bezier(0.25,0.8,0.25,1), opacity 0.4s ease';
-      lbImg.style.transform = `translateX(${direction*100}%) scale(0.95)`;
-      lbImg.style.opacity = '0';
-      setTimeout(() => {
-        lbImg.src = `images/${img.file}`;
-        lbDate.textContent = img.date;
-        lbImg.style.transform = `translateX(${-direction*100}%) scale(0.95)`;
-        lbImg.style.opacity = '1';
-        requestAnimationFrame(()=>{ lbImg.style.transform = 'translateX(0) scale(1)'; });
-      }, 400);
-    } else {
-      lbImg.src = `images/${img.file}`;
-      lbDate.textContent = img.date;
-      lbImg.style.transition = 'transform 1.3s ease, opacity 0.5s ease';
-      lbImg.style.transform = 'scale(1)';
-      lbImg.style.opacity = '1';
-    }
-  }
+function updateLightbox(){
+  const img = imagesList[currentIndex];
+  lbImg.src=`images/${img.file}`;
+  lbDate.textContent=img.date;
+}
 
-  function prevImage() {
-    currentIndex = (currentIndex - 1 + imagesList.length) % imagesList.length;
-    updateLightbox(true, 1);
-  }
-  function nextImage() {
-    currentIndex = (currentIndex + 1) % imagesList.length;
-    updateLightbox(true, -1);
-  }
+function prevImage(){ currentIndex=(currentIndex-1+imagesList.length)%imagesList.length; updateLightbox(); }
+function nextImage(){ currentIndex=(currentIndex+1)%imagesList.length; updateLightbox(); }
 
-  lbClose.addEventListener('click', closeLightbox);
-  lbPrev.addEventListener('click', prevImage);
-  lbNext.addEventListener('click', nextImage);
-  lightbox.addEventListener('click', e => { if(e.target === lightbox) closeLightbox(); });
+lbClose.addEventListener('click', closeLightbox);
+lbPrev.addEventListener('click', prevImage);
+lbNext.addEventListener('click', nextImage);
+lightbox.addEventListener('click', e=>{ if(e.target===lightbox) closeLightbox(); });
 
-  // Touch swipe
-  let touchStartX = 0, touchEndX = 0;
-  lightbox.addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].screenX; });
-  lightbox.addEventListener('touchend', e => {
-    touchEndX = e.changedTouches[0].screenX;
-    const diff = touchEndX - touchStartX;
-    if(diff < -50) nextImage();
-    if(diff > 50) prevImage();
-  });
+let touchStartX=0, touchEndX=0;
+lightbox.addEventListener('touchstart', e=>{ touchStartX=e.changedTouches[0].screenX; });
+lightbox.addEventListener('touchend', e=>{
+  touchEndX=e.changedTouches[0].screenX;
+  const diff = touchEndX - touchStartX;
+  if(diff<-50) nextImage();
+  if(diff>50) prevImage();
+});
 
-  // Load JSON
-  fetch('images/images.json')
-    .then(res => res.json())
-    .then(data => { if(Array.isArray(data)) data.forEach(displayImage); })
-    .catch(err => console.warn('Không load được JSON:', err));
+function toggleMode(){
+  document.body.classList.toggle('dark');
+  if(document.body.classList.contains('dark')){ modeToggle.textContent='☀️'; }
+  else{ modeToggle.textContent='🌙'; }
+}
+modeToggle.addEventListener('click', toggleMode);
 
-  // Load YAML (tùy chọn)
-  fetch('images/update-images-json.yml')
-    .then(res => res.text())
-    .then(text => {
-      const data = jsyaml.load(text);
-      if(data && Array.isArray(data.images)) data.images.forEach(displayImage);
-    })
-    .catch(err => console.warn('Không load được YAML:', err));
+// Load JSON
+fetch('images/images.json')
+  .then(res=>res.json())
+  .then(data=>{ if(Array.isArray(data)) data.forEach(displayImage); })
+  .catch(err=>console.warn('Không load được JSON:', err));
+
+// Load YAML
+fetch('images/update-images-json.yml')
+  .then(res=>res.text())
+  .then(text=>{
+    const data = jsyaml.load(text);
+    if(data && Array.isArray(data.images)) data.images.forEach(displayImage);
+  })
+  .catch(err=>console.warn('Không load được YAML:', err));
 </script>
 </body>
 </html>
