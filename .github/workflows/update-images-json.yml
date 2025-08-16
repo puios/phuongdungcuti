@@ -19,7 +19,7 @@ jobs:
         run: |
           cd images
 
-          # JSON
+          # Tạo JSON
           echo "[" > images.json
           for file in *.{jpg,jpeg,png,gif,webp}; do
             [ -f "$file" ] || continue
@@ -29,7 +29,7 @@ jobs:
           sed -i '$ s/,$//' images.json
           echo "]" >> images.json
 
-          # YAML
+          # Tạo YAML
           echo "images:" > update-images-json.yml
           for file in *.{jpg,jpeg,png,gif,webp}; do
             [ -f "$file" ] || continue
