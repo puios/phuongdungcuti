@@ -17,7 +17,7 @@ jobs:
       # 2️⃣ Tạo JSON và YAML từ folder images
       - name: Tạo JSON và YAML
         run: |
-          cd images
+          cd images || exit 1
 
           # Tạo JSON
           echo "[" > images.json
@@ -38,11 +38,13 @@ jobs:
             echo "    date: $date" >> update-images-json.yml
           done
 
-      # 3️⃣ Commit & push JSON/YAML
+      # 3️⃣ Commit & push JSON/YAML với token
       - name: Commit và push JSON/YAML
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           git config user.name "github-actions"
           git config user.email "actions@github.com"
           git add images/images.json images/update-images-json.yml
-          git commit -m "Tự động cập nhật images.json & update-images-json.yml" || echo "No changes to commit"
-          git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/puios/phuongdungcuti.git main
+          git diff --cached --quiet || git commit -m "Tự động cập nhật images.json & update-images-json.yml"
+          git push https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}.git main
