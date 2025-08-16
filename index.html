@@ -3,125 +3,110 @@
 <head>
 <meta charset="UTF-8">
 <title>Album Của Phuong Dunq📷</title>
-<!-- Google Fonts -->
 <link href="https://fonts.googleapis.com/css2?family=Mali&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bg-color: #f4f4f4;
-    --text-color: #000;
-    --box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    --highlight: #fff;
-  }
-  body.dark {
-    --bg-color: #111;
-    --text-color: #fff;
-    --box-shadow: 0 2px 8px rgba(255,255,255,0.2);
-  }
-  body {
-    font-family: 'Mali', cursive; /* <-- font Mali */
-    margin: 0;
-    padding: 20px;
-    background: var(--bg-color);
-    color: var(--text-color);
-    text-align: center;
-    transition: background 0.5s, color 0.5s;
-    overflow-x: hidden;
-  }
-  h1 { 
-    margin-bottom: 20px; 
-    font-family: 'Mali', cursive; /* áp dụng Mali */
-  }
-  .theme-toggle {
-    position: fixed;
-    top: 20px;
-    left: 20px;
-    font-size: 36px;
-    cursor: pointer;
-    user-select: none;
-    z-index: 1000;
-    transition: transform 0.3s;
-  }
-  .theme-toggle:hover { transform: scale(1.1); }
+:root {
+  --bg-color: #f4f4f4;
+  --text-color: #000;
+  --box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  --highlight: #fff;
+}
+body.dark {
+  --bg-color: #111;
+  --text-color: #fff;
+  --box-shadow: 0 2px 8px rgba(255,255,255,0.2);
+}
+body {
+  font-family: 'Mali', cursive;
+  margin: 0;
+  padding: 20px;
+  background: var(--bg-color);
+  color: var(--text-color);
+  text-align: center;
+  transition: background 0.5s, color 0.5s;
+  overflow-x: hidden;
+}
+h1 { margin-bottom: 20px; font-family: 'Mali', cursive; }
+.theme-toggle {
+  position: fixed; top: 20px; left: 20px;
+  font-size: 54px; cursor: pointer; user-select: none;
+  z-index: 1000; transition: transform 0.3s;
+}
+.theme-toggle:hover { transform: scale(1.1); }
 
-  .gallery {
-    display: grid;
-    grid-template-columns: repeat(2,1fr);
-    gap: 15px;
-    max-width: 800px;
-    margin: 0 auto;
-    transition: filter 0.3s;
-  }
-  .blur { filter: blur(5px); }
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(2,1fr);
+  gap: 15px;
+  max-width: 800px;
+  margin: 0 auto;
+  transition: filter 0.3s;
+}
+.blur { filter: blur(5px); }
 
-  .image-box {
-    position: relative;
-    width: 100%;
-    padding-top: 75%; /* 4:3 */
-    border-radius: 12px;
-    overflow: hidden;
-    background: white;
-    box-shadow: var(--box-shadow);
-    cursor: pointer;
-    transition: transform 0.2s;
-  }
-  .image-box:hover { transform: scale(1.03); }
-  .image-box img {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    top: 0; left: 0;
-  }
-  .image-box p {
-    position: absolute;
-    bottom: 5px; left: 5px;
-    margin: 0;
-    padding: 2px 6px;
-    background: rgba(0,0,0,0.5);
-    color: white;
-    font-size: 12px;
-    border-radius: 4px;
-    opacity: 0;
-    transition: opacity 0.2s;
-    font-family: 'Mali', cursive; /* <-- font Mali cho ngày */
-  }
-  .image-box:active p { opacity: 1; }
+.image-box {
+  position: relative;
+  width: 100%;
+  padding-top: 75%; /* 4:3 */
+  border-radius: 12px;
+  overflow: hidden;
+  background: white;
+  box-shadow: var(--box-shadow);
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+.image-box:hover { transform: scale(1.03); }
+.image-box img {
+  position: absolute;
+  top: 50%; left: 50%;
+  width: 100%; height: 100%;
+  object-fit: cover;
+  transform: translate(-50%, -50%);
+}
+.image-box p {
+  position: absolute; bottom: 5px; left: 5px;
+  margin: 0; padding: 2px 6px;
+  background: rgba(0,0,0,0.5);
+  color: white; font-size: 12px;
+  border-radius: 4px; opacity:0;
+  transition: opacity 0.2s; font-family: 'Mali', cursive;
+}
+.image-box:active p { opacity: 1; }
 
-  .lightbox {
-    display: none;
-    position: fixed;
-    top:0; left:0; width:100%; height:100%;
-    background: rgba(0,0,0,0.8);
-    justify-content: center; align-items: center;
-    z-index: 999; flex-direction: column;
-    opacity: 0; transition: opacity 0.5s ease;
-    overflow: hidden;
-  }
-  .lightbox.show { display: flex; opacity:1; }
-  .lightbox img {
-    max-width: 90%; max-height: 70%;
-    border-radius: 12px;
-    box-shadow: 0 0 30px var(--highlight);
-    transition: transform 1.3s ease, box-shadow 0.5s ease;
-    transform: scale(0.7);
-  }
-  .lightbox.show img { transform: scale(1); }
-  .lightbox p { 
-    margin:5px 0 0; 
-    font-size:16px; 
-    color:var(--highlight); 
-    font-family: 'Mali', cursive; /* <-- font Mali cho ngày Lightbox */
-  }
-  .lightbox .close, .lightbox .prev, .lightbox .next {
-    position: absolute; font-size: 30px; cursor: pointer;
-    user-select: none; background: rgba(0,0,0,0.3);
-    padding: 5px 10px; border-radius: 6px;
-  }
-  .lightbox .close { top: 20px; right: 30px; }
-  .lightbox .prev { left: 20px; top: 50%; transform: translateY(-50%); }
-  .lightbox .next { right: 20px; top: 50%; transform: translateY(-50%); }
+.lightbox {
+  display: none;
+  position: fixed;
+  top:0; left:0; width:100%; height:100%;
+  background: rgba(0,0,0,0.8);
+  justify-content: center; align-items: center;
+  z-index: 999; flex-direction: column;
+  opacity:0; transition: opacity 0.5s ease;
+  overflow: hidden;
+}
+.lightbox.show { display:flex; opacity:1; }
+.lightbox img {
+  width: 80%;
+  aspect-ratio: 4/3;
+  object-fit: cover;
+  border-radius: 12px;
+  box-shadow: 0 0 30px var(--highlight);
+  transition: transform 1.3s ease, box-shadow 0.5s ease, opacity 1.3s ease;
+  transform: scale(0.7);
+  opacity: 0;
+}
+.lightbox.show img { transform: scale(1); opacity:1; }
+.lightbox p { margin:5px 0 0; font-size:16px; color:var(--highlight); font-family: 'Mali', cursive; }
 
-  @media(max-width:600px){ .gallery{grid-template-columns:1fr;} }
+.lightbox .close, .lightbox .prev, .lightbox .next {
+  position: absolute; font-size: 30px; cursor:pointer;
+  user-select: none; background: rgba(0,0,0,0.3);
+  padding: 5px 10px; border-radius:6px;
+}
+.lightbox .close { top:20px; right:30px; }
+.lightbox .prev { left:20px; top:50%; transform: translateY(-50%); }
+.lightbox .next { right:20px; top:50%; transform: translateY(-50%); }
+
+@media(max-width:600px){ .gallery{grid-template-columns:1fr;} }
 </style>
 </head>
 <body>
@@ -156,7 +141,7 @@ themeToggle.addEventListener('click', ()=>{
   themeToggle.textContent=document.body.classList.contains('dark')?'☀️':'🌙';
 });
 
-// Display image in gallery
+// Display image
 function displayImage(img){
   imagesList.push(img);
   const box=document.createElement('div');
@@ -167,7 +152,7 @@ function displayImage(img){
   gallery.appendChild(box);
 }
 
-// Open/close lightbox
+// Open/close Lightbox
 function openLightbox(index){
   currentIndex=index;
   updateLightbox();
@@ -180,39 +165,30 @@ function closeLightbox(){
   gallery.classList.remove('blur');
   document.body.style.overflow='';
   lbImg.style.transform='scale(0.7)';
+  lbImg.style.opacity='0';
   setTimeout(()=>{ lbImg.src=''; lbDate.textContent=''; },500);
 }
 
-// Update lightbox with animation
 function updateLightbox(){
   const img=imagesList[currentIndex];
   lbImg.src=`images/${img.file}`;
   lbDate.textContent=img.date;
   lbImg.style.transform='scale(0.7)';
-  requestAnimationFrame(()=>{ lbImg.style.transform='scale(1)'; });
+  lbImg.style.opacity='0';
+  requestAnimationFrame(()=>{
+    lbImg.style.transition='transform 1.3s ease, opacity 1.3s ease';
+    lbImg.style.transform='scale(1)';
+    lbImg.style.opacity='1';
+  });
 }
 
-// Swipe animation
+// Change image
 function changeImage(dir){
   if(isAnimating) return;
   isAnimating=true;
-  const oldImg=lbImg.cloneNode();
-  oldImg.style.position='absolute'; oldImg.style.top='0'; oldImg.style.left='0';
-  oldImg.style.width='100%'; oldImg.style.transition='transform 0.5s ease, opacity 0.5s ease';
-  oldImg.src=lbImg.src;
-  lightbox.appendChild(oldImg);
-
   currentIndex=(currentIndex+dir+imagesList.length)%imagesList.length;
-  const newImgData=imagesList[currentIndex];
-  lbImg.src=`images/${newImgData.file}`;
-  lbDate.textContent=newImgData.date;
-  lbImg.style.transition=''; lbImg.style.transform=`translateX(${dir*100}%)`; lbImg.style.opacity='0';
-  requestAnimationFrame(()=>{
-    lbImg.style.transition='transform 0.5s ease, opacity 0.5s ease';
-    lbImg.style.transform='translateX(0)'; lbImg.style.opacity='1';
-    oldImg.style.transform=`translateX(${-dir*100}%)`; oldImg.style.opacity='0';
-    setTimeout(()=>{ lightbox.removeChild(oldImg); isAnimating=false; },500);
-  });
+  updateLightbox();
+  setTimeout(()=>{ isAnimating=false; },500);
 }
 
 lbClose.addEventListener('click',closeLightbox);
