@@ -1,118 +1,103 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-  <meta charset="UTF-8">
-  <title>Album pdungcutii</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f4f4f4;
-      margin: 0;
-      padding: 20px;
-      text-align: center;
-    }
+<meta charset="UTF-8">
+<title>Album Của Phuong Dunq📷</title>
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background: #f4f4f4;
+    margin: 0;
+    padding: 20px;
+    text-align: center;
+}
+h1 {
+    margin-bottom: 20px;
+}
+.gallery {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+    max-width: 800px;
+    margin: 0 auto;
+    transition: filter 0.3s;
+}
+.blur { filter: blur(5px); }
+.image-box {
+    position: relative;
+    width: 100%;
+    padding-top: 100%;
+    border-radius: 12px;
+    overflow: hidden;
+    background: white;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+.image-box:hover { transform: scale(1.03); }
+.image-box img {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    top: 0;
+    left: 0;
+}
+.image-box p {
+    position: absolute;
+    bottom: 5px;
+    left: 5px;
+    margin: 0;
+    padding: 2px 6px;
+    background: rgba(0,0,0,0.5);
+    color: white;
+    font-size: 12px;
+    border-radius: 4px;
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+.image-box:active p { opacity: 1; }
 
-    h1 {
-      margin-bottom: 20px;
-    }
-
-    .gallery {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 15px;
-      max-width: 800px;
-      margin: 0 auto;
-      transition: filter 0.3s;
-    }
-
-    .blur { filter: blur(5px); }
-
-    .image-box {
-      position: relative;
-      width: 100%;
-      padding-top: 100%;
-      border-radius: 12px;
-      overflow: hidden;
-      background: white;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-      cursor: pointer;
-      transition: transform 0.2s;
-    }
-
-    .image-box:hover { transform: scale(1.03); }
-
-    .image-box img {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      top: 0;
-      left: 0;
-    }
-
-    .image-box p {
-      position: absolute;
-      bottom: 5px;
-      left: 5px;
-      margin: 0;
-      padding: 2px 6px;
-      background: rgba(0,0,0,0.5);
-      color: white;
-      font-size: 12px;
-      border-radius: 4px;
-      opacity: 0;
-      transition: opacity 0.2s;
-    }
-
-    .image-box:active p { opacity: 1; }
-
-    .lightbox {
-      display: none;
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0,0,0,0.8);
-      justify-content: center;
-      align-items: center;
-      z-index: 999;
-      flex-direction: column;
-      color: white;
-      opacity: 0;
-      transition: opacity 0.3s;
-      overflow: hidden;
-    }
-
-    .lightbox.show { display: flex; opacity: 1; }
-
-    .lightbox img {
-      max-width: 90%;
-      max-height: 70%;
-      border-radius: 12px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.7);
-      margin-bottom: 10px;
-      position: relative;
-      transition: transform 0.3s ease;
-    }
-
-    .lightbox p { margin: 5px 0 0 0; font-size: 16px; }
-
-    .lightbox .close, .lightbox .prev, .lightbox .next {
-      position: absolute;
-      font-size: 30px;
-      cursor: pointer;
-      user-select: none;
-      background: rgba(0,0,0,0.3);
-      padding: 5px 10px;
-      border-radius: 6px;
-    }
-
-    .lightbox .close { top: 20px; right: 30px; }
-    .lightbox .prev { left: 20px; top: 50%; transform: translateY(-50%); }
-    .lightbox .next { right: 20px; top: 50%; transform: translateY(-50%); }
-
-    @media (max-width: 600px) { .gallery { grid-template-columns: 1fr; } }
-  </style>
+.lightbox {
+    display: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.8);
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+    flex-direction: column;
+    color: white;
+    opacity: 0;
+    transition: opacity 0.3s;
+    overflow: hidden;
+}
+.lightbox.show { display: flex; opacity: 1; }
+.lightbox img {
+    max-width: 90%;
+    max-height: 70%;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.7);
+    margin-bottom: 10px;
+    position: relative;
+    transition: transform 0.3s ease;
+}
+.lightbox p { margin: 5px 0 0 0; font-size: 16px; }
+.lightbox .close, .lightbox .prev, .lightbox .next {
+    position: absolute;
+    font-size: 30px;
+    cursor: pointer;
+    user-select: none;
+    background: rgba(0,0,0,0.3);
+    padding: 5px 10px;
+    border-radius: 6px;
+}
+.lightbox .close { top: 20px; right: 30px; }
+.lightbox .prev { left: 20px; top: 50%; transform: translateY(-50%); }
+.lightbox .next { right: 20px; top: 50%; transform: translateY(-50%); }
+@media (max-width: 600px) { .gallery { grid-template-columns: 1fr; } }
+</style>
 </head>
 <body>
 <h1>Album Của Phuong Dunq📷</h1>
@@ -127,106 +112,95 @@
   <p id="lb-date"></p>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/js-yaml@4.1.0/dist/js-yaml.min.js"></script>
 <script>
-  const gallery = document.getElementById('gallery');
-  const lightbox = document.getElementById('lightbox');
-  const lbImg = document.getElementById('lb-img');
-  const lbDate = document.getElementById('lb-date');
-  const lbClose = document.getElementById('lb-close');
-  const lbPrev = document.getElementById('lb-prev');
-  const lbNext = document.getElementById('lb-next');
+const gallery = document.getElementById('gallery');
+const lightbox = document.getElementById('lightbox');
+const lbImg = document.getElementById('lb-img');
+const lbDate = document.getElementById('lb-date');
+const lbClose = document.getElementById('lb-close');
+const lbPrev = document.getElementById('lb-prev');
+const lbNext = document.getElementById('lb-next');
 
-  let imagesList = [];
-  let currentIndex = 0;
+let imagesList = [];
+let currentIndex = 0;
 
-  function displayImage(img) {
-    imagesList.push(img);
-    const box = document.createElement('div');
-    box.className = 'image-box';
-    box.innerHTML = `<img src="images/${img.file}" alt="${img.file}">
-                     <p>${img.date}</p>`;
-    const index = imagesList.length - 1;
-    box.addEventListener('click', () => openLightbox(index));
-    gallery.appendChild(box);
-  }
+function displayImage(img) {
+  // Tránh trùng ảnh
+  if(imagesList.some(i => i.file === img.file)) return;
 
-  function openLightbox(index) {
-    currentIndex = index;
-    updateLightbox();
-    gallery.classList.add('blur');
-    lightbox.classList.add('show');
-  }
+  imagesList.push(img);
+  const box = document.createElement('div');
+  box.className = 'image-box';
+  box.innerHTML = `<img src="images/${img.file}" alt="${img.file}"><p>${img.date}</p>`;
+  const index = imagesList.length - 1;
+  box.addEventListener('click', () => openLightbox(index));
+  gallery.appendChild(box);
+}
 
-  function closeLightbox() {
-    lightbox.classList.remove('show');
-    gallery.classList.remove('blur');
-    lbImg.style.transform = 'translateX(0)';
-    setTimeout(() => { lbImg.src = ''; lbDate.textContent = ''; }, 300);
-  }
+function openLightbox(index) {
+  currentIndex = index;
+  updateLightbox();
+  gallery.classList.add('blur');
+  lightbox.classList.add('show');
+}
 
-  function updateLightbox(animate = false, direction = 0) {
-    const img = imagesList[currentIndex];
-    if(animate) {
-      lbImg.style.transition = 'transform 0.3s ease';
-      lbImg.style.transform = `translateX(${direction * 100}%)`;
-      setTimeout(() => {
-        lbImg.src = `images/${img.file}`;
-        lbDate.textContent = img.date;
-        lbImg.style.transform = `translateX(${-direction * 100}%)`;
-        requestAnimationFrame(() => { lbImg.style.transform = 'translateX(0)'; });
-      }, 300);
-    } else {
+function closeLightbox() {
+  lightbox.classList.remove('show');
+  gallery.classList.remove('blur');
+  lbImg.style.transform = 'translateX(0)';
+  setTimeout(() => { lbImg.src = ''; lbDate.textContent = ''; }, 300);
+}
+
+function updateLightbox(animate = false, direction = 0) {
+  const img = imagesList[currentIndex];
+  if(animate) {
+    lbImg.style.transition = 'transform 0.3s ease';
+    lbImg.style.transform = `translateX(${direction * 100}%)`;
+    setTimeout(() => {
       lbImg.src = `images/${img.file}`;
       lbDate.textContent = img.date;
-      lbImg.style.transition = '';
-      lbImg.style.transform = 'translateX(0)';
-    }
+      lbImg.style.transform = `translateX(${-direction * 100}%)`;
+      requestAnimationFrame(() => { lbImg.style.transform = 'translateX(0)'; });
+    }, 300);
+  } else {
+    lbImg.src = `images/${img.file}`;
+    lbDate.textContent = img.date;
+    lbImg.style.transition = '';
+    lbImg.style.transform = 'translateX(0)';
   }
+}
 
-  function prevImage() {
-    currentIndex = (currentIndex - 1 + imagesList.length) % imagesList.length;
-    updateLightbox(true, 1);
-  }
+function prevImage() {
+  currentIndex = (currentIndex - 1 + imagesList.length) % imagesList.length;
+  updateLightbox(true, 1);
+}
 
-  function nextImage() {
-    currentIndex = (currentIndex + 1) % imagesList.length;
-    updateLightbox(true, -1);
-  }
+function nextImage() {
+  currentIndex = (currentIndex + 1) % imagesList.length;
+  updateLightbox(true, -1);
+}
 
-  lbClose.addEventListener('click', closeLightbox);
-  lbPrev.addEventListener('click', prevImage);
-  lbNext.addEventListener('click', nextImage);
-  lightbox.addEventListener('click', e => { if(e.target === lightbox) closeLightbox(); });
+lbClose.addEventListener('click', closeLightbox);
+lbPrev.addEventListener('click', prevImage);
+lbNext.addEventListener('click', nextImage);
+lightbox.addEventListener('click', e => { if(e.target === lightbox) closeLightbox(); });
 
-  // Swipe support
-  let touchStartX = 0;
-  let touchEndX = 0;
-  lightbox.addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].screenX; });
-  lightbox.addEventListener('touchend', e => {
-    touchEndX = e.changedTouches[0].screenX;
-    handleGesture();
-  });
-  function handleGesture() {
-    const diff = touchEndX - touchStartX;
-    if(diff < -50) nextImage();
-    if(diff > 50) prevImage();
-  }
+// Swipe support
+let touchStartX = 0;
+let touchEndX = 0;
+lightbox.addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].screenX; });
+lightbox.addEventListener('touchend', e => {
+  touchEndX = e.changedTouches[0].screenX;
+  const diff = touchEndX - touchStartX;
+  if(diff < -50) nextImage();
+  if(diff > 50) prevImage();
+});
 
-  // Load JSON
-  fetch('images/images.json')
-    .then(res => res.json())
-    .then(data => { if(Array.isArray(data)) data.forEach(displayImage); })
-    .catch(err => console.warn('Không load được JSON:', err));
-
-  // Load YAML (tùy chọn)
-  fetch('images/update-images-json.yml')
-    .then(res => res.text())
-    .then(text => {
-      const data = jsyaml.load(text);
-      if(data && Array.isArray(data.images)) data.images.forEach(displayImage);
-    })
-    .catch(err => console.warn('Không load được YAML:', err));
+// Chỉ load JSON
+fetch('images/images.json')
+  .then(res => res.json())
+  .then(data => { if(Array.isArray(data)) data.forEach(displayImage); })
+  .catch(err => console.warn('Không load được JSON:', err));
 </script>
 </body>
 </html>
