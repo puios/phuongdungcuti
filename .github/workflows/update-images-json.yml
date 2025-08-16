@@ -16,24 +16,27 @@ jobs:
       - name: Tạo JSON và YAML từ thư mục images
         run: |
           cd images
-          # JSON
+
+          # Tạo JSON
           echo "[" > images.json
           for file in *.{jpg,jpeg,png,gif,webp}; do
             [ -f "$file" ] || continue
-            # Lấy ngày commit gần nhất của file
+            # Lấy ngày commit gần nhất của file, nếu không có commit thì lấy ngày hiện tại
             date=$(git log -1 --format="%cs" -- "$file" || date +%Y-%m-%d)
             echo "  {\"file\": \"$file\", \"date\": \"$date\"}," >> images.json
           done
+          # Xóa dấu phẩy cuối cùng
           sed -i '$ s/,$//' images.json
           echo "]" >> images.json
 
-          # YAML
+          # Tạo YAML
           echo "images:" > update-images-json.yml
           for file in *.{jpg,jpeg,png,gif,webp}; do
             [ -f "$file" ] || continue
             date=$(git log -1 --format="%cs" -- "$file" || date +%Y-%m-%d)
             echo "  - file: $file" >> update-images-json.yml
             echo "    date: $date" >> update-images-json.yml
+          done
 
       - name: Commit và push JSON/YAML
         uses: ad-m/github-push-action@v0.6.0
