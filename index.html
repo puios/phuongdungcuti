@@ -4,69 +4,72 @@
 <meta charset="UTF-8">
 <title>Album Của Phuong Dunq📷</title>
 <style>
-  body {
-    font-family: Arial, sans-serif;
-    background: #f4f4f4;
-    margin: 0;
-    padding: 20px;
-    text-align: center;
-    transition: background 0.3s, color 0.3s;
+  :root {
+    --bg-color: #f4f4f4;
+    --text-color: #000;
+    --box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    --highlight: #fff;
   }
   body.dark {
-    background: #111;
-    color: #fff;
+    --bg-color: #111;
+    --text-color: #fff;
+    --box-shadow: 0 2px 8px rgba(255,255,255,0.2);
   }
-
+  body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    background: var(--bg-color);
+    color: var(--text-color);
+    text-align: center;
+    transition: background 0.5s, color 0.5s;
+    overflow-x: hidden;
+  }
   h1 { margin-bottom: 20px; }
-
   .theme-toggle {
     position: fixed;
     top: 20px;
     left: 20px;
-    font-size: 48px; /* To gấp 3 lần lửa trước đây */
+    font-size: 36px;
     cursor: pointer;
     user-select: none;
     z-index: 1000;
     transition: transform 0.3s;
   }
+  .theme-toggle:hover { transform: scale(1.1); }
 
   .gallery {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2,1fr);
     gap: 15px;
     max-width: 800px;
     margin: 0 auto;
     transition: filter 0.3s;
   }
-
   .blur { filter: blur(5px); }
 
   .image-box {
     position: relative;
     width: 100%;
-    padding-top: 100%;
+    padding-top: 75%; /* 4:3 */
     border-radius: 12px;
     overflow: hidden;
     background: white;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    box-shadow: var(--box-shadow);
     cursor: pointer;
-    transition: transform 0.2s, box-shadow 0.3s;
+    transition: transform 0.2s;
   }
   .image-box:hover { transform: scale(1.03); }
-
   .image-box img {
     position: absolute;
     width: 100%;
     height: 100%;
     object-fit: cover;
-    top: 0;
-    left: 0;
+    top: 0; left: 0;
   }
-
   .image-box p {
     position: absolute;
-    bottom: 5px;
-    left: 5px;
+    bottom: 5px; left: 5px;
     margin: 0;
     padding: 2px 6px;
     background: rgba(0,0,0,0.5);
@@ -81,51 +84,38 @@
   .lightbox {
     display: none;
     position: fixed;
-    top: 0; left: 0;
-    width: 100%;
-    height: 100%;
+    top:0; left:0; width:100%; height:100%;
     background: rgba(0,0,0,0.8);
-    justify-content: center;
-    align-items: center;
-    z-index: 999;
-    flex-direction: column;
-    color: white;
+    justify-content: center; align-items: center;
+    z-index: 999; flex-direction: column;
+    opacity: 0; transition: opacity 0.5s ease;
     overflow: hidden;
-    transition: opacity 0.3s;
   }
-  .lightbox.show { display: flex; opacity: 1; }
-
+  .lightbox.show { display: flex; opacity:1; }
   .lightbox img {
-    max-width: 90%;
-    max-height: 70%;
+    max-width: 90%; max-height: 70%;
     border-radius: 12px;
-    box-shadow: 0 0 30px white; /* phát sáng khi mở */
-    transition: transform 1.3s ease; /* animation to dần */
+    box-shadow: 0 0 30px var(--highlight);
+    transition: transform 1.3s ease, box-shadow 0.5s ease;
+    transform: scale(0.7);
   }
-
-  .lightbox p { margin: 5px 0 0 0; font-size: 16px; }
-
+  .lightbox.show img { transform: scale(1); }
+  .lightbox p { margin:5px 0 0; font-size:16px; color:var(--highlight); }
   .lightbox .close, .lightbox .prev, .lightbox .next {
-    position: absolute;
-    font-size: 30px;
-    cursor: pointer;
-    user-select: none;
-    background: rgba(0,0,0,0.3);
-    padding: 5px 10px;
-    border-radius: 6px;
+    position: absolute; font-size: 30px; cursor: pointer;
+    user-select: none; background: rgba(0,0,0,0.3);
+    padding: 5px 10px; border-radius: 6px;
   }
   .lightbox .close { top: 20px; right: 30px; }
   .lightbox .prev { left: 20px; top: 50%; transform: translateY(-50%); }
   .lightbox .next { right: 20px; top: 50%; transform: translateY(-50%); }
 
-  @media (max-width: 600px) { .gallery { grid-template-columns: 1fr; } }
+  @media(max-width:600px){ .gallery{grid-template-columns:1fr;} }
 </style>
 </head>
 <body>
 <h1>Album Của Phuong Dunq📷</h1>
-
 <div class="theme-toggle" id="theme-toggle">🌙</div>
-
 <div class="gallery" id="gallery"></div>
 
 <div class="lightbox" id="lightbox">
@@ -149,84 +139,101 @@ const themeToggle = document.getElementById('theme-toggle');
 
 let imagesList = [];
 let currentIndex = 0;
+let isAnimating = false;
+
+// Theme toggle
+themeToggle.addEventListener('click', ()=>{
+  document.body.classList.toggle('dark');
+  if(document.body.classList.contains('dark')) themeToggle.textContent = '☀️';
+  else themeToggle.textContent = '🌙';
+});
 
 // Display image in gallery
-function displayImage(img) {
+function displayImage(img){
   imagesList.push(img);
   const box = document.createElement('div');
-  box.className = 'image-box';
-  box.innerHTML = `<img src="images/${img.file}" alt="${img.file}"><p>${img.date}</p>`;
-  const index = imagesList.length - 1;
-  box.addEventListener('click', () => openLightbox(index));
+  box.className='image-box';
+  box.innerHTML=`<img src="images/${img.file}" alt="${img.file}"><p>${img.date}</p>`;
+  const index = imagesList.length-1;
+  box.addEventListener('click', ()=>openLightbox(index));
   gallery.appendChild(box);
 }
 
-// Open lightbox
-function openLightbox(index) {
-  currentIndex = index;
-  updateLightbox(false);
-  document.body.style.overflow = 'hidden'; // khoá cuộn mạnh
+// Open/close lightbox
+function openLightbox(index){
+  currentIndex=index;
+  updateLightbox();
+  document.body.style.overflow='hidden';
   gallery.classList.add('blur');
   lightbox.classList.add('show');
-  lbImg.style.transform = 'scale(0.7)';
-  setTimeout(() => { lbImg.style.transform = 'scale(1)'; }, 50); // animation mượt
 }
-
-// Close lightbox
-function closeLightbox() {
+function closeLightbox(){
   lightbox.classList.remove('show');
   gallery.classList.remove('blur');
-  lbImg.style.transform = 'scale(0.7)';
-  setTimeout(() => {
-    document.body.style.overflow = '';
-    lbImg.src = '';
-    lbDate.textContent = '';
-  }, 300);
+  document.body.style.overflow='';
+  lbImg.style.transform='scale(0.7)';
+  setTimeout(()=>{ lbImg.src=''; lbDate.textContent=''; },500);
 }
 
-// Update lightbox
-function updateLightbox(animate=false, direction=0) {
+// Lightbox update with fade/slide
+function updateLightbox(){
   const img = imagesList[currentIndex];
-  lbImg.src = `images/${img.file}`;
-  lbDate.textContent = img.date;
+  lbImg.src=`images/${img.file}`;
+  lbDate.textContent=img.date;
+  lbImg.style.transform='scale(0.7)';
+  requestAnimationFrame(()=>{ lbImg.style.transform='scale(1)'; });
 }
 
-// Navigate
-function prevImage() { currentIndex = (currentIndex - 1 + imagesList.length) % imagesList.length; updateLightbox(); }
-function nextImage() { currentIndex = (currentIndex + 1) % imagesList.length; updateLightbox(); }
+// Swipe animation
+function changeImage(dir){
+  if(isAnimating) return;
+  isAnimating=true;
+  const oldImg=lbImg.cloneNode();
+  oldImg.style.position='absolute'; oldImg.style.top='0'; oldImg.style.left='0';
+  oldImg.style.width='100%'; oldImg.style.transition='transform 0.5s ease, opacity 0.5s ease';
+  oldImg.src=lbImg.src;
+  lightbox.appendChild(oldImg);
 
-lbClose.addEventListener('click', closeLightbox);
-lbPrev.addEventListener('click', prevImage);
-lbNext.addEventListener('click', nextImage);
-lightbox.addEventListener('click', e => { if(e.target === lightbox) closeLightbox(); });
+  currentIndex=(currentIndex+dir+imagesList.length)%imagesList.length;
+  const newImgData=imagesList[currentIndex];
+  lbImg.src=`images/${newImgData.file}`;
+  lbDate.textContent=newImgData.date;
+  lbImg.style.transition=''; lbImg.style.transform=`translateX(${dir*100}%)`; lbImg.style.opacity='0';
+  requestAnimationFrame(()=>{
+    lbImg.style.transition='transform 0.5s ease, opacity 0.5s ease';
+    lbImg.style.transform='translateX(0)'; lbImg.style.opacity='1';
+    oldImg.style.transform=`translateX(${-dir*100}%)`; oldImg.style.opacity='0';
+    setTimeout(()=>{ lightbox.removeChild(oldImg); isAnimating=false; },500);
+  });
+}
 
-// Swipe
-let touchStartX = 0, touchEndX = 0;
-lightbox.addEventListener('touchstart', e => touchStartX = e.changedTouches[0].screenX);
-lightbox.addEventListener('touchend', e => { touchEndX = e.changedTouches[0].screenX; handleGesture(); });
-function handleGesture() { const diff = touchEndX - touchStartX; if(diff < -50) nextImage(); if(diff > 50) prevImage(); }
+// Prev/Next handlers
+function prevImage(){ changeImage(-1); }
+function nextImage(){ changeImage(1); }
+
+lbClose.addEventListener('click',closeLightbox);
+lbPrev.addEventListener('click',prevImage);
+lbNext.addEventListener('click',nextImage);
+lightbox.addEventListener('click', e=>{ if(e.target===lightbox) closeLightbox(); });
+
+// Swipe mobile
+let startX=0,endX=0;
+lightbox.addEventListener('touchstart', e=>{ startX=e.changedTouches[0].screenX; });
+lightbox.addEventListener('touchend', e=>{
+  endX=e.changedTouches[0].screenX;
+  const diff=endX-startX;
+  if(diff>50) prevImage();
+  else if(diff<-50) nextImage();
+});
 
 // Load JSON
-fetch('images/images.json')
-  .then(res => res.json())
-  .then(data => { if(Array.isArray(data)) data.forEach(displayImage); })
-  .catch(err => console.warn('Không load được JSON:', err));
+fetch('images/images.json').then(r=>r.json()).then(data=>{ if(Array.isArray(data)) data.forEach(displayImage); }).catch(e=>console.warn('JSON lỗi:',e));
 
-// Load YAML
-fetch('images/update-images-json.yml')
-  .then(res => res.text())
-  .then(text => { const data = jsyaml.load(text); if(data && Array.isArray(data.images)) data.images.forEach(displayImage); })
-  .catch(err => console.warn('Không load được YAML:', err));
-
-// Theme toggle
-function updateThemeButton() {
-  themeToggle.textContent = document.body.classList.contains('dark') ? '🌞' : '🌙';
-}
-themeToggle.addEventListener('click', () => {
-  document.body.classList.toggle('dark');
-  updateThemeButton();
-});
-updateThemeButton();
+// Load YAML (tùy chọn)
+fetch('images/update-images-json.yml').then(r=>r.text()).then(text=>{
+  const data = jsyaml.load(text);
+  if(data && Array.isArray(data.images)) data.images.forEach(displayImage);
+}).catch(e=>console.warn('YAML lỗi:',e));
 </script>
 </body>
 </html>
